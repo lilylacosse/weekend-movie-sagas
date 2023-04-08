@@ -30,7 +30,7 @@ function* fetchAllMovies() {
 function* fetchOneMovie(action) {
   try {
     const movieDetails = yield axios.get(`/api/movie/${action.payload}`);
-    console.log(`fetchOneMovie:`, action.payload);
+    console.log(`fetchOneMovie:`, movieDetails.data);
     yield put({ type: "SET_MOVIE_DETAILS", payload: movieDetails.data });
   } catch {}
 }
@@ -47,10 +47,10 @@ const movies = (state = [], action) => {
   }
 };
 // Stores details retrieved from a single movie
-const movieDetails = (state = [], action) => {
+const movieDetails = (state = {}, action) => {
   switch (action.type) {
     case "SET_MOVIE_DETAILS":
-      return action.payload;
+      return { ...action.payload[0] };
     default:
       return state;
   }
