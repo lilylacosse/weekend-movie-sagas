@@ -15,6 +15,8 @@ import axios from "axios";
 function* rootSaga() {
   yield takeEvery("FETCH_MOVIES", fetchAllMovies);
   yield takeEvery("FETCH_MOVIE_DETAILS", fetchOneMovie);
+  yield takeEvery("FETCH_GENRES", fetchAllGenres);
+  yield takeEvery("POST_NEW_MOVIE", postNewMovie);
 }
 
 function* fetchAllMovies() {
@@ -27,12 +29,34 @@ function* fetchAllMovies() {
     console.log("get all error");
   }
 }
+// this saga gets all of the data for one movie, including all genres for that movie, from the DB
 function* fetchOneMovie(action) {
   try {
     const movieDetails = yield axios.get(`/api/movie/${action.payload}`);
     console.log(`fetchOneMovie:`, movieDetails.data);
     yield put({ type: "SET_MOVIE_DETAILS", payload: movieDetails.data });
-  } catch {}
+  } catch {
+    console.log("get one error");
+  }
+}
+// saga get all genres from the db, and then saves them in the genres reducer
+function* fetchAllGenres() {
+  try {
+    const genres = yield axios.get("/api/genre");
+    // console.log(`genres.data:`, { ...genres.data });
+    yield put({ type: "SET_GENRES", payload: genres.data });
+  } catch {
+    console.log("get genres error");
+  }
+}
+// saga posts a new movie to the db, the post handles updating both the movie table and the genre table
+function* postNewMovie(action) {
+  try {
+    axios.post("/api/movie", action.payload);
+    put({ type: "FETCH_MOVIES" });
+  } catch {
+    console.log("post new movie error");
+  }
 }
 // Create sagaMiddleware
 const sagaMiddleware = createSagaMiddleware();
