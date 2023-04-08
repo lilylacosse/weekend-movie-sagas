@@ -30,7 +30,7 @@ function* fetchAllMovies() {
 function* fetchOneMovie(action) {
   try {
     const movieDetails = yield axios.get(`/api/movie/${action.payload}`);
-    console.log();
+    console.log(`fetchOneMovie:`, action.payload);
     yield put({ type: "SET_MOVIE_DETAILS", payload: movieDetails.data });
   } catch {}
 }
@@ -41,6 +41,15 @@ const sagaMiddleware = createSagaMiddleware();
 const movies = (state = [], action) => {
   switch (action.type) {
     case "SET_MOVIES":
+      return action.payload;
+    default:
+      return state;
+  }
+};
+// Stores details retrieved from a single movie
+const movieDetails = (state = [], action) => {
+  switch (action.type) {
+    case "SET_MOVIE_DETAILS":
       return action.payload;
     default:
       return state;
@@ -61,6 +70,7 @@ const storeInstance = createStore(
   combineReducers({
     movies,
     genres,
+    movieDetails,
   }),
   // Add sagaMiddleware to our store
   applyMiddleware(sagaMiddleware, logger)
