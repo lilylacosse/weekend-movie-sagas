@@ -8,7 +8,7 @@ function AddMovie() {
     const [newTitle, setNewTitle] = useState("");
     const [newURL, setNewURL] = useState("");
     const [newDescription, setNewDescription] = useState("");
-    const [newGenre, setNewGenre] = useState("");
+    const [newGenreID, setNewGenre] = useState("");
     const genres = useSelector((store) => store.genres);
 
     const dispatch = useDispatch();
@@ -17,46 +17,53 @@ function AddMovie() {
     useEffect(() => {
         dispatch({ type: "FETCH_GENRES" });
     }, []);
+    function handleGenre() {
+        console.log('HANDLEGENRE:', event.target.value);
+        setNewGenre(event.target.value)
+    }
 
-    function onAddMovie() {
+    function submitMovie(event) {
+
         event.preventDefault();
+        console.log("newGenreID:", newGenreID);
         let newMovie = {
             title: newTitle,
             poster: newURL,
             description: newDescription,
-            name: newGenre,
+            genre_id: newGenreID,
         };
 
-        dispatch({ type: POST_NEW_MOVIE, payload: newMovie });
+        dispatch({ type: "POST_NEW_MOVIE", payload: newMovie });
+        history.push('/')
     }
     return (
-        <>
-            <form onSubmit={() => onAddMovie}>
+        <><h2>Add a Movie</h2>
+            <form onSubmit={submitMovie}>
                 <input
                     type="text"
                     placeholder="Title"
+                    value={newTitle}
                     onChange={(evt) => setNewTitle(evt.target.value)}
                 />
                 <input
                     type="text"
                     placeholder="Poster URL"
+                    value={newURL}
                     onChange={(evt) => setNewURL(evt.target.value)}
                 />
                 <textarea
                     placeholder="Description"
+                    value={newDescription}
                     rows={6}
                     cols={60}
                     onChange={(evt) => setNewDescription(evt.target.value)}
                 ></textarea>
-                <select
-                    value={newGenre}
-                    onChange={(evt) => setNewGenre(evt.target.value)}
+                <select value={newGenreID}
+                    onChange={handleGenre}
                 >
-                    <option value="" disabled selected style={{ color: "grey" }}>
-                        -Genre-
-                    </option>
+
                     {genres.map((genre) => (
-                        <option value={genre.id}>{genre.name}</option>
+                        <option key={genre.id} value={genre.id}>{genre.name}</option>
                     ))}
                 </select>
                 <button type="submit">Add Movie</button>
