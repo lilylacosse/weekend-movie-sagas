@@ -16,11 +16,12 @@ function MovieList() {
     }, []);
 
     function goToDetails(movieId) {
+
         dispatch({
             type: "FETCH_MOVIE_DETAILS",
             payload: movieId,
         })
-        history.push("/details");
+        history.push("/details")
     }
 
     return (

@@ -52,8 +52,8 @@ function* fetchAllGenres() {
 // saga posts a new movie to the db, the post handles updating both the movie table and the genre table
 function* postNewMovie(action) {
   try {
-    axios.post("/api/movie", action.payload);
-    put({ type: "FETCH_MOVIES" });
+    yield axios.post("/api/movie", action.payload);
+    yield put({ type: "FETCH_MOVIES" });
   } catch {
     console.log("post new movie error");
   }
