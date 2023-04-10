@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
+import "./AddMovie.css";
 
 function AddMovie() {
     const [newTitle, setNewTitle] = useState("");
@@ -17,15 +18,26 @@ function AddMovie() {
     useEffect(() => {
         dispatch({ type: "FETCH_GENRES" });
     }, []);
+
     function handleGenre() {
         console.log('HANDLEGENRE:', event.target.value);
         setNewGenre(event.target.value)
     }
 
-    function submitMovie(event) {
+    function handleCancel() {
+        // clear all inputs 
+        setNewTitle('')
+        setNewURL('')
+        setNewDescription('')
+        setNewGenre('')
+        // brings user back to MovieList 
+        history.push('/');
+    }
 
+    function submitMovie(event) {
         event.preventDefault();
         console.log("newGenreID:", newGenreID);
+
         let newMovie = {
             title: newTitle,
             poster: newURL,
@@ -34,6 +46,14 @@ function AddMovie() {
         };
 
         dispatch({ type: "POST_NEW_MOVIE", payload: newMovie });
+
+        // clear all inputs 
+        setNewTitle('')
+        setNewURL('')
+        setNewDescription('')
+        setNewGenre('')
+
+        // brings user back to MovieList 
         history.push('/')
     }
     return (
@@ -45,12 +65,14 @@ function AddMovie() {
                     value={newTitle}
                     onChange={(evt) => setNewTitle(evt.target.value)}
                 />
+                <br />
                 <input
                     type="text"
                     placeholder="Poster URL"
                     value={newURL}
                     onChange={(evt) => setNewURL(evt.target.value)}
                 />
+                <br />
                 <textarea
                     placeholder="Description"
                     value={newDescription}
@@ -58,6 +80,8 @@ function AddMovie() {
                     cols={60}
                     onChange={(evt) => setNewDescription(evt.target.value)}
                 ></textarea>
+                <br />
+                <label >Genre:</label>
                 <select value={newGenreID}
                     onChange={handleGenre}
                 >
@@ -66,8 +90,11 @@ function AddMovie() {
                         <option key={genre.id} value={genre.id}>{genre.name}</option>
                     ))}
                 </select>
-                <button type="submit">Add Movie</button>
+
+                <button className="button" onClick={handleCancel}>Cancel</button>
+                <button className="button" type="submit">Save Movie</button>
             </form>
+
         </>
     );
 }

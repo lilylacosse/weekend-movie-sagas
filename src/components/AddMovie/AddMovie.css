@@ -1,20 +1,3 @@
-.movies {
-    display: grid;
-    grid-template-columns: 33% 33% 33%;
-}
-
-h1 {
-
-    color: #64b6ac;
-    text-shadow: 2px 2px 2px black;
-    font-size: 3em;
-}
-
-
-button {
-    margin: 2%
-}
-
 .button {
     padding: 0.6em 2em;
     border: 2px #002bff;
